@@ -1,0 +1,10 @@
+DAY 4 PROGRESS
+
+1. Studied invisible Unicode fingerprinting.
+2. Implemented detector for Zero Width Space and Zero Width Non-Joiner.
+3. Mapped hidden characters to binary values.
+4. Built reusable function extract_unicode_bits().
+5. Verified successful hidden bit extraction.
+
+Status:
+Layer 1 Unicode fingerprint detection ready.

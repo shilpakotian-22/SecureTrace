@@ -1,0 +1,27 @@
+DAY 1 PROGRESS
+
+1. Created project folder structure:
+   backend/
+   detection/
+   reports/
+   tests/
+   docs/
+
+2. Created Python virtual environment.
+
+3. Installed required libraries:
+   python-docx
+   pymupdf
+   flask
+   psycopg2-binary
+   sqlalchemy
+   python-dotenv
+
+4. Verified installations.
+
+5. Created first detection file (main.py).
+
+6. Added sample.docx and sample.pdf for testing.
+
+Status:
+Project environment ready for document parsing.

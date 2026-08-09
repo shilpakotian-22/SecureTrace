@@ -1,0 +1,475 @@
+{% extends "base.html" %}
+
+{% block title %}
+Leak Detection
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>🔍 Leak Detection</h2>
+
+    <p class="text-muted">
+        Upload a suspected leaked document to compare its fingerprints
+        against previously generated documents.
+    </p>
+
+    <hr>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body p-4">
+
+            <h4 class="mb-3">
+                Upload Suspected Document
+            </h4>
+
+            <form
+                method="POST"
+                enctype="multipart/form-data">
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Select DOCX Document
+                    </label>
+
+                    <input
+                        type="file"
+                        name="document"
+                        class="form-control"
+                        accept=".docx"
+                        required>
+
+                    <div class="form-text">
+                        Upload a DOCX document for fingerprint analysis.
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-danger">
+
+                    🔍 Detect Leak
+
+                </button>
+
+            </form>
+
+            {% if result %}
+
+            <hr class="my-4">
+
+            <div class="card border-0 bg-light">
+
+                <div class="card-body p-4">
+
+                    <!-- Detection Result Heading -->
+
+                    {% if result.confidence >= 90 %}
+
+                        <h3 class="text-success mb-4">
+                            ✔ Strong Fingerprint Match
+                        </h3>
+
+                    {% elif result.confidence >= 70 %}
+
+                        <h3 class="text-warning mb-4">
+                            ⚠ Possible Fingerprint Match
+                        </h3>
+
+                    {% else %}
+
+                        <h3 class="text-danger mb-4">
+                            ✖ Reliable Match Not Established
+                        </h3>
+
+                    {% endif %}
+
+
+                    <!-- Investigation Summary -->
+
+                    <h5>
+                        Investigation Summary
+                    </h5>
+
+                    {% if result.confidence >= 90 %}
+
+                        <div
+                            class="alert alert-success"
+                            role="alert">
+
+                            The extracted fingerprints strongly match
+                            the copy generated for the identified recipient.
+
+                        </div>
+
+                    {% elif result.confidence >= 70 %}
+
+                        <div
+                            class="alert alert-warning"
+                            role="alert">
+
+                            The document shares multiple fingerprint
+                            characteristics with the copy generated for
+                            the identified recipient. Manual verification
+                            is recommended before drawing a final conclusion.
+
+                        </div>
+
+                    {% else %}
+
+                        <div
+                            class="alert alert-danger"
+                            role="alert">
+
+                            The available fingerprint evidence is not
+                            strong enough to establish a reliable match.
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Forensic Recommendation -->
+
+                    <hr>
+
+                    <h5>
+                        Forensic Recommendation
+                    </h5>
+
+                    {% if result.confidence >= 90 %}
+
+                        <div
+                            class="alert alert-success"
+                            role="alert">
+
+                            The fingerprint layers show a strong match.
+                            Review the assignment and distribution records
+                            associated with this recipient as part of the
+                            investigation.
+
+                        </div>
+
+                    {% elif result.confidence >= 70 %}
+
+                        <div
+                            class="alert alert-warning"
+                            role="alert">
+
+                            The fingerprint evidence indicates a possible
+                            match. Manual verification of the generated
+                            document and associated records is recommended.
+
+                        </div>
+
+                    {% else %}
+
+                        <div
+                            class="alert alert-danger"
+                            role="alert">
+
+                            The extracted fingerprints are insufficient
+                            for reliable attribution. Additional
+                            investigation is recommended.
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Investigation Details -->
+
+                    <h5 class="mt-4">
+                        Investigation Details
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table
+                            class="table table-bordered table-striped align-middle mt-3">
+
+                            <tbody>
+
+                                <tr>
+
+                                    <th style="width: 30%;">
+                                        Recipient
+                                    </th>
+
+                                    <td>
+                                        {{ result.recipient or "Not Available" }}
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+                                        Recipient Email
+                                    </th>
+
+                                    <td>
+                                        {{ result.recipient_email or "Not Available" }}
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+                                        Generated Document
+                                    </th>
+
+                                    <td>
+                                        {{ result.generated_file or "Not Available" }}
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+                                        Generated On
+                                    </th>
+
+                                    <td>
+
+                                        {% if result.generated_at %}
+
+                                            {{ result.generated_at.strftime("%d-%m-%Y %I:%M %p") }}
+
+                                        {% else %}
+
+                                            Not Available
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+                                        Email Delivery
+                                    </th>
+
+                                    <td>
+
+                                        {% if result.email_status == "Sent" %}
+
+                                            <span class="badge bg-success">
+                                                Sent
+                                            </span>
+
+                                        {% elif result.email_status == "Failed" %}
+
+                                            <span class="badge bg-danger">
+                                                Failed
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-warning text-dark">
+                                                {{ result.email_status or "Pending" }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+                                        Assignment ID
+                                    </th>
+
+                                    <td>
+                                        {{ result.assignment_id or "Not Available" }}
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+                                        Overall Confidence
+                                    </th>
+
+                                    <td>
+
+                                        {% if result.confidence >= 90 %}
+
+                                            <span class="badge bg-success fs-6">
+
+                                                {{ result.confidence }} %
+
+                                            </span>
+
+                                        {% elif result.confidence >= 70 %}
+
+                                            <span class="badge bg-warning text-dark fs-6">
+
+                                                {{ result.confidence }} %
+
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-danger fs-6">
+
+                                                {{ result.confidence }} %
+
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- Fingerprint Layer Analysis -->
+
+                    <hr>
+
+                    <h5>
+                        Fingerprint Layer Analysis
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table
+                            class="table table-bordered align-middle mt-3">
+
+                            <tbody>
+
+                                <!-- Unicode -->
+
+                                <tr>
+
+                                    <th style="width: 30%;">
+                                        Unicode Layer
+                                    </th>
+
+                                    <td>
+
+                                        <div
+                                            class="progress"
+                                            role="progressbar"
+                                            aria-label="Unicode fingerprint match"
+                                            aria-valuenow="{{ result.unicode }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100">
+
+                                            <div
+                                                class="progress-bar bg-success"
+                                                style="width: {{ result.unicode }}%;">
+
+                                                {{ result.unicode }} %
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <!-- Font -->
+
+                                <tr>
+
+                                    <th>
+                                        Font Layer
+                                    </th>
+
+                                    <td>
+
+                                        <div
+                                            class="progress"
+                                            role="progressbar"
+                                            aria-label="Font fingerprint match"
+                                            aria-valuenow="{{ result.font }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100">
+
+                                            <div
+                                                class="progress-bar bg-info"
+                                                style="width: {{ result.font }}%;">
+
+                                                {{ result.font }} %
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <!-- Synonym -->
+
+                                <tr>
+
+                                    <th>
+                                        Synonym Layer
+                                    </th>
+
+                                    <td>
+
+                                        <div
+                                            class="progress"
+                                            role="progressbar"
+                                            aria-label="Synonym fingerprint match"
+                                            aria-valuenow="{{ result.synonym }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100">
+
+                                            <div
+                                                class="progress-bar bg-warning text-dark"
+                                                style="width: {{ result.synonym }}%;">
+
+                                                {{ result.synonym }} %
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

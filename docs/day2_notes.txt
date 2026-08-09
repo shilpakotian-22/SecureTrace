@@ -1,0 +1,12 @@
+DAY 2 PROGRESS
+
+1. Created DOCX parser module using python-docx.
+2. Successfully loaded sample.docx file.
+3. Extracted paragraph-wise text from document.
+4. Combined complete text into one output string.
+5. Converted logic into reusable function read_docx(path).
+6. Verified successful execution using test document.
+
+Status:
+DOCX text extraction completed.
+Ready for structural metadata extraction in next phase.

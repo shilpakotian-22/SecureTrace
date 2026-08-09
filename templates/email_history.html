@@ -1,0 +1,455 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+
+Email Distribution
+
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="fw-bold">
+
+            📧 Email Distribution
+
+        </h2>
+
+        <p class="text-muted mb-0">
+
+            Track fingerprinted document email delivery.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- Statistics -->
+
+<div class="row g-3 mb-5">
+
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm text-center h-100">
+
+            <div class="card-body">
+
+                <h2>
+
+                    {{ total }}
+
+                </h2>
+
+                <small class="text-muted">
+
+                    Total Emails
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-success shadow-sm text-center h-100">
+
+            <div class="card-body">
+
+                <h2 class="text-success">
+
+                    {{ sent }}
+
+                </h2>
+
+                <small>
+
+                    Sent
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-warning shadow-sm text-center h-100">
+
+            <div class="card-body">
+
+                <h2 class="text-warning">
+
+                    {{ pending }}
+
+                </h2>
+
+                <small>
+
+                    Pending
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-danger shadow-sm text-center h-100">
+
+            <div class="card-body">
+
+                <h2 class="text-danger">
+
+                    {{ failed }}
+
+                </h2>
+
+                <small>
+
+                    Failed
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- Search -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <form
+            method="GET"
+            class="row g-2"
+        >
+
+            <div class="col-md-10">
+
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Search recipient, subject or status..."
+                    value="{{ search }}"
+                >
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary w-100"
+                >
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Email History -->
+
+<div class="card shadow">
+
+    <div class="card-header">
+
+        <h5 class="mb-0">
+
+            📋 Email History
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table
+                class="table table-hover table-bordered align-middle mb-0"
+            >
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Recipient</th>
+
+                        <th>Subject</th>
+
+                        <th>Attachment</th>
+
+                        <th>Status</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% if emails.items|length == 0 %}
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="text-center text-muted py-4"
+                        >
+
+                            No email records found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
+
+                    {% for email in emails.items %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ email.id }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ email.recipient }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ email.subject }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if email.attachment %}
+
+                                {{ email.attachment.split("\\")[-1] }}
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if email.status == "Sent" %}
+
+                                <span
+                                    class="badge bg-success"
+                                >
+
+                                    Sent
+
+                                </span>
+
+                            {% elif email.status == "Pending" %}
+
+                                <span
+                                    class="badge bg-warning text-dark"
+                                >
+
+                                    Pending
+
+                                </span>
+
+                            {% elif email.status == "Failed" %}
+
+                                <span
+                                    class="badge bg-danger"
+                                >
+
+                                    Failed
+
+                                </span>
+
+                            {% else %}
+
+                                <span
+                                    class="badge bg-secondary"
+                                >
+
+                                    {{ email.status }}
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if email.sent_at %}
+
+                                {{ email.sent_at.strftime(
+                                    "%d-%m-%Y %H:%M"
+                                ) }}
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Pagination -->
+
+{% if emails.pages > 1 %}
+
+<nav class="mt-4">
+
+    <ul class="pagination justify-content-center">
+
+
+        {% if emails.has_prev %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="{{ url_for(
+                    'email_service.history',
+                    page=emails.prev_num,
+                    search=search
+                ) }}"
+            >
+
+                Previous
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+
+        {% for page_num in emails.iter_pages() %}
+
+            {% if page_num %}
+
+                <li
+                    class="page-item
+                    {% if page_num == emails.page %}
+                        active
+                    {% endif %}"
+                >
+
+                    <a
+                        class="page-link"
+                        href="{{ url_for(
+                            'email_service.history',
+                            page=page_num,
+                            search=search
+                        ) }}"
+                    >
+
+                        {{ page_num }}
+
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        {% if emails.has_next %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="{{ url_for(
+                    'email_service.history',
+                    page=emails.next_num,
+                    search=search
+                ) }}"
+            >
+
+                Next
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+
+    </ul>
+
+</nav>
+
+{% endif %}
+
+{% endblock %}

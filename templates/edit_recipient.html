@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Recipient
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h3>Edit Recipient</h3>
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label>Name</label>
+
+<input
+name="name"
+class="form-control"
+value="{{ recipient.name }}"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Email</label>
+
+<input
+name="email"
+class="form-control"
+type="email"
+value="{{ recipient.email }}"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Department</label>
+
+<input
+name="department"
+class="form-control"
+value="{{ recipient.department }}"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Organization</label>
+
+<input
+name="organization"
+class="form-control"
+value="{{ recipient.organization }}"
+required>
+
+</div>
+
+<button
+class="btn btn-primary">
+
+Update Recipient
+
+</button>
+
+<a
+href="{{ url_for('recipient.recipients') }}"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

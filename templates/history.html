@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}
+Detection History
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>📑 Detection History</h2>
+
+    <p class="text-muted">
+        View all leak investigations performed by
+        {{ app_settings.application_name }}.
+    </p>
+
+    <hr>
+
+    <!-- Investigation Statistics -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card text-bg-primary shadow h-100">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Investigations</h5>
+
+                    <h2 class="fw-bold">
+                        {{ history|length }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card text-bg-success shadow h-100">
+
+                <div class="card-body text-center">
+
+                    <h5>Strong Matches</h5>
+
+                    <h2 class="fw-bold">
+                        {{ history|selectattr("confidence", "ge", 90)|list|length }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card text-bg-warning shadow h-100">
+
+                <div class="card-body text-center">
+
+                    <h5>Require Review</h5>
+
+                    <h2 class="fw-bold">
+                        {{ history|selectattr("confidence", "lt", 90)|list|length }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Detection History Table -->
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table
+                    class="table table-bordered table-hover table-striped align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Leaked File</th>
+
+                            <th>Recipient</th>
+
+                            <th>Confidence</th>
+
+                            <th>Result</th>
+
+                            <th>Date</th>
+
+                            <th>Report</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in history %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.id }}
+                            </td>
+
+                            <td>
+                                {{ item.uploaded_file or "Not Available" }}
+                            </td>
+
+                            <td>
+                                {{ item.detected_recipient or "Not Available" }}
+                            </td>
+
+                            <td>
+
+                                {% if item.confidence >= 90 %}
+
+                                    <span class="badge bg-success">
+                                        {{ item.confidence }} %
+                                    </span>
+
+                                {% elif item.confidence >= 70 %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        {{ item.confidence }} %
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+                                        {{ item.confidence }} %
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if item.confidence >= 90 %}
+
+                                    <span class="badge bg-success">
+                                        Strong Match
+                                    </span>
+
+                                {% elif item.confidence >= 70 %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        Possible Match
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+                                        Uncertain
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if item.detected_at %}
+
+                                    {{ item.detected_at.strftime("%d-%m-%Y %H:%M") }}
+
+                                {% else %}
+
+                                    Not Available
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="{{ url_for('reports.download_report', id=item.id) }}"
+                                    class="btn btn-primary btn-sm">
+
+                                    📄 Download PDF
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="text-center text-muted py-4">
+
+                                No leak investigations have been performed yet.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}
+Generated Documents
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h2 class="mb-1">
+                    🧬 Generated Fingerprinted Documents
+                </h2>
+
+                <p class="text-muted mb-0">
+
+                    Download fingerprinted documents or distribute them
+                    securely by email.
+
+                </p>
+
+            </div>
+
+            <a
+                href="{{ url_for('assignment.assignments') }}"
+                class="btn btn-secondary">
+
+                ← Assignments
+
+            </a>
+
+        </div>
+
+
+        <hr>
+
+
+        {% if documents %}
+
+        <div class="table-responsive">
+
+            <table
+                class="table table-bordered table-striped table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Recipient</th>
+
+                        <th>Unicode</th>
+
+                        <th>Font</th>
+
+                        <th>Synonym</th>
+
+                        <th>Generated At</th>
+
+                        <th>Download</th>
+
+                        <th>Email</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for doc in documents %}
+
+                    <tr>
+
+                        <!-- ID -->
+
+                        <td>
+                            {{ doc.id }}
+                        </td>
+
+
+                        <!-- Recipient -->
+
+                        <td>
+
+                            {% if doc.recipient %}
+
+                                {{ doc.recipient }}
+
+                                {% if doc.recipient_email %}
+
+                                    <br>
+
+                                    <small class="text-muted">
+                                        {{ doc.recipient_email }}
+                                    </small>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Not Available
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Unicode Fingerprint -->
+
+                        <td>
+
+                            {% if doc.unicode_hash %}
+
+                                <code>
+                                    {{ doc.unicode_hash[:10] }}...
+                                </code>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    N/A
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Font Fingerprint -->
+
+                        <td>
+
+                            {% if doc.font_hash %}
+
+                                <code>
+                                    {{ doc.font_hash[:10] }}...
+                                </code>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    N/A
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Synonym Fingerprint -->
+
+                        <td>
+
+                            {% if doc.synonym_hash %}
+
+                                <code>
+                                    {{ doc.synonym_hash[:10] }}...
+                                </code>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    N/A
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Generated Date -->
+
+                        <td>
+
+                            {% if doc.generated_at %}
+
+                                {{ doc.generated_at.strftime("%d-%m-%Y %H:%M") }}
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Not Available
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Download -->
+
+                        <td>
+
+                            <a
+                                href="{{ url_for('assignment.download_generated', id=doc.id) }}"
+                                class="btn btn-success btn-sm">
+
+                                ⬇ Download
+
+                            </a>
+
+                        </td>
+
+
+                        <!-- Send Email -->
+
+                        <td>
+
+                            {% if doc.email_status == "Sent" %}
+
+                                <span class="badge bg-success mb-2">
+                                    Already Sent
+                                </span>
+
+                                <br>
+
+                            {% endif %}
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('assignment.send_document', id=doc.id) }}"
+                                class="d-inline">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Send this fingerprinted document by email?');">
+
+                                    📧 Send Email
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+
+                        <!-- Email Status -->
+
+                        <td>
+
+                            {% if doc.email_status == "Sent" %}
+
+                                <span class="badge bg-success">
+                                    Sent
+                                </span>
+
+                            {% elif doc.email_status == "Failed" %}
+
+                                <span class="badge bg-danger">
+                                    Failed
+                                </span>
+
+                            {% elif doc.email_status == "Pending" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Pending
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+
+                                    {{ doc.email_status or "Unknown" }}
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <!-- Empty State -->
+
+        <div class="text-center py-5">
+
+            <div class="display-4 mb-3">
+                📭
+            </div>
+
+            <h4>
+                No Fingerprinted Documents
+            </h4>
+
+            <p class="text-muted">
+
+                No fingerprinted documents have been generated yet.
+
+            </p>
+
+            <a
+                href="{{ url_for('assignment.assignments') }}"
+                class="btn btn-primary">
+
+                Go to Assignments
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

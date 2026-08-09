@@ -1,0 +1,115 @@
+# =========================================================
+# Environment / Secrets
+# =========================================================
+
+.env
+.env.*
+!.env.example
+
+# OAuth / Google credentials
+credentials.json
+token.json
+client_secret.json
+google_credentials.json
+
+# Secret keys / certificates
+*.pem
+*.key
+*.crt
+
+# =========================================================
+# Python
+# =========================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+.venv/
+venv/
+env/
+ENV/
+
+# =========================================================
+# Flask
+# =========================================================
+
+instance/
+
+# =========================================================
+# Database
+# =========================================================
+
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================================================
+# Uploaded / Generated Files
+# =========================================================
+
+uploads/*
+generated_documents/*
+generated_reports/*
+generated/*
+tmp/*
+temp/*
+
+# Keep directory structure if desired
+!uploads/.gitkeep
+!generated_documents/.gitkeep
+!generated_reports/.gitkeep
+
+# =========================================================
+# Logs
+# =========================================================
+
+*.log
+logs/
+
+# =========================================================
+# IDE
+# =========================================================
+
+.vscode/
+.idea/
+
+# =========================================================
+# Operating System
+# =========================================================
+
+.DS_Store
+Thumbs.db
+
+# =========================================================
+# Build / Distribution
+# =========================================================
+
+build/
+dist/
+*.egg-info/
+
+# =========================================================
+# Node (if ever used)
+# =========================================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+
+# Google OAuth credentials
+credentials/
+token.json
+
+# Temporary detection files
+temp_detection/
+
+# Generated application files
+generated_documents/
+generated_reports/
+uploads/
+instance/

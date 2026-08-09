@@ -1,0 +1,10 @@
+DAY 7 PROGRESS
+
+1. Developed weighted confidence score model.
+2. Implemented full, partial, and no-match scoring.
+3. Built reusable calculate_confidence() function.
+4. Generated final attribution output with confidence percentage.
+5. Improved realism of leak attribution system.
+
+Status:
+Confidence scoring engine ready.

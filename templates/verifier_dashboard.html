@@ -1,0 +1,29 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+Verifier Dashboard
+{% endblock %}
+
+{% block dashboard_content %}
+
+<h2>
+
+Welcome, {{ session['full_name'] }}
+
+</h2>
+
+<div class="alert alert-info mt-4">
+
+Verifier Module will be developed in Module 8.
+
+</div>
+
+<a
+href="/auth/logout"
+class="btn btn-danger">
+
+Logout
+
+</a>
+
+{% endblock %}

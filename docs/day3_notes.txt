@@ -1,0 +1,11 @@
+DAY 3 PROGRESS
+
+1. Developed DOCX run-level structural parser.
+2. Extracted font sizes from text runs.
+3. Normalized default style font values.
+4. Implemented bit detection using font variation.
+5. Created reusable function extract_font_bits().
+6. Prepared Layer 2 detection module.
+
+Status:
+Font variation fingerprint detection ready.

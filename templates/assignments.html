@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}
+Assignments
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <h3 class="mb-4">
+            Document Assignment
+        </h3>
+
+        <!-- Create Assignment -->
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Document
+                </label>
+
+                <select
+                    name="document"
+                    class="form-select"
+                    required>
+
+                    <option
+                        value=""
+                        selected
+                        disabled>
+
+                        Select a document
+
+                    </option>
+
+                    {% for document in documents %}
+
+                    <option value="{{ document.id }}">
+
+                        {{ document.filename }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Recipient
+                </label>
+
+                <select
+                    name="recipient"
+                    class="form-select"
+                    required>
+
+                    <option
+                        value=""
+                        selected
+                        disabled>
+
+                        Select a recipient
+
+                    </option>
+
+                    {% for recipient in recipients %}
+
+                    <option value="{{ recipient.id }}">
+
+                        {{ recipient.name }}
+                        — {{ recipient.email }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                Assign Document
+
+            </button>
+
+        </form>
+
+
+        <hr class="my-5">
+
+
+        <!-- Assignment Management -->
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h3 class="mb-0">
+                Assignments
+            </h3>
+
+        </div>
+
+
+        <!-- Generate Fingerprints -->
+
+        <form
+            method="POST"
+            action="{{ url_for('assignment.generate_fingerprints') }}"
+            class="d-inline">
+
+            <button
+                type="submit"
+                class="btn btn-success mb-3"
+                onclick="return confirm('Generate fingerprinted documents for all assignments that do not already have one?');">
+
+                🧬 Generate Fingerprinted Documents
+
+            </button>
+
+        </form>
+
+
+        <!-- Generated Documents -->
+
+        <a
+            href="{{ url_for('assignment.generated_documents') }}"
+            class="btn btn-primary mb-3 ms-2">
+
+            📄 View Generated Documents
+
+        </a>
+
+
+        <!-- Assignment Table -->
+
+        <div class="table-responsive">
+
+            <table
+                class="table table-bordered table-striped table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Document</th>
+
+                        <th>Recipient</th>
+
+                        <th>Assigned At</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for assignment in assignments %}
+
+                    <tr>
+
+                        <td>
+                            {{ assignment.id }}
+                        </td>
+
+                        <td>
+
+                            {% if assignment.document %}
+
+                                {{ assignment.document.filename }}
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Document unavailable
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if assignment.recipient %}
+
+                                <strong>
+                                    {{ assignment.recipient.name }}
+                                </strong>
+
+                                <br>
+
+                                <small class="text-muted">
+                                    {{ assignment.recipient.email }}
+                                </small>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Recipient unavailable
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if assignment.assigned_at %}
+
+                                {{ assignment.assigned_at.strftime("%d-%m-%Y %H:%M") }}
+
+                            {% else %}
+
+                                Not Available
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            class="text-center text-muted py-4">
+
+                            No assignments found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}
+SecureTrace
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+<div class="row justify-content-center mt-5">
+
+<div class="col-lg-8 text-center">
+
+<h1 class="display-3 fw-bold text-primary">
+
+🛡 SecureTrace
+
+</h1>
+
+<p class="lead mt-4">
+
+Multi-Layer Document Fingerprinting
+for Insider Leak Attribution
+
+</p>
+
+<p class="text-muted">
+
+Protect • Track • Attribute
+
+</p>
+
+<div class="d-grid gap-3 mt-4">
+
+<a href="{{ url_for('google_auth.login') }}"
+class="btn btn-danger btn-lg">
+
+<img
+src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+width="22"
+class="me-2">
+
+Continue with Google
+
+</a>
+
+<a href="{{ url_for('authentication.login') }}"
+class="btn btn-outline-primary">
+
+Developer Login
+
+</a>
+
+<a href="{{ url_for('authentication.register') }}"
+class="btn btn-outline-secondary">
+
+Developer Register
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

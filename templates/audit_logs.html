@@ -1,0 +1,392 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+
+Audit Logs
+
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="fw-bold">
+
+            📝 Audit Logs
+
+        </h2>
+
+        <p class="text-muted mb-0">
+
+            Security activity and system actions recorded by
+            {{ app_settings.application_name }}.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- Statistics -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm text-center h-100">
+
+            <div class="card-body">
+
+                <h2>
+
+                    {{ total_logs }}
+
+                </h2>
+
+                <small class="text-muted">
+
+                    Total Audit Events
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm text-center h-100">
+
+            <div class="card-body">
+
+                <h2>
+
+                    {{ logs.total }}
+
+                </h2>
+
+                <small class="text-muted">
+
+                    Matching Events
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="card border-primary shadow-sm text-center h-100">
+
+            <div class="card-body">
+
+                <h2 class="text-primary">
+
+                    {{ logs.pages }}
+
+                </h2>
+
+                <small>
+
+                    Pages
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Search -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <form
+            method="GET"
+            class="row g-2"
+        >
+
+            <div class="col-md-10">
+
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Search user, action or details..."
+                    value="{{ search }}"
+                >
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary w-100"
+                >
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Audit Table -->
+
+<div class="card shadow">
+
+    <div class="card-header">
+
+        <h5 class="mb-0">
+
+            🔐 Security Activity
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table
+                class="table table-hover table-bordered align-middle mb-0"
+            >
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>User</th>
+
+                        <th>Action</th>
+
+                        <th>Details</th>
+
+                        <th>Timestamp</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% if logs.items|length == 0 %}
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="text-center text-muted py-4"
+                        >
+
+                            No audit events found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
+
+                    {% for log in logs.items %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ log.id }}
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+
+                                {{ log.user }}
+
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ log.action }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if log.details %}
+
+                                {{ log.details }}
+
+                            {% else %}
+
+                                <span class="text-muted">
+
+                                    No additional details
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if log.timestamp %}
+
+                                {{ log.timestamp.strftime(
+                                    "%d-%m-%Y %H:%M:%S"
+                                ) }}
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Pagination -->
+
+{% if logs.pages > 1 %}
+
+<nav class="mt-4">
+
+    <ul class="pagination justify-content-center">
+
+
+        {% if logs.has_prev %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="{{ url_for(
+                    'audit.audit_logs',
+                    page=logs.prev_num,
+                    search=search
+                ) }}"
+            >
+
+                Previous
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+
+        {% for page_num in logs.iter_pages() %}
+
+            {% if page_num %}
+
+            <li
+                class="page-item
+                {% if page_num == logs.page %}
+                    active
+                {% endif %}"
+            >
+
+                <a
+                    class="page-link"
+                    href="{{ url_for(
+                        'audit.audit_logs',
+                        page=page_num,
+                        search=search
+                    ) }}"
+                >
+
+                    {{ page_num }}
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        {% if logs.has_next %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="{{ url_for(
+                    'audit.audit_logs',
+                    page=logs.next_num,
+                    search=search
+                ) }}"
+            >
+
+                Next
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+
+    </ul>
+
+</nav>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,527 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+Owner Dashboard
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="row">
+
+    <div class="col-12">
+
+        <h2 class="fw-bold">
+            Welcome back, {{ session["full_name"] }} 👋
+        </h2>
+
+        <p class="text-muted">
+            {{ app_settings.organization }}
+        </p>
+
+        <hr>
+
+        <h4 class="fw-semibold mb-4">
+
+            📊 {{ app_settings.application_name }} Analytics
+
+        </h4>
+
+    </div>
+
+</div>
+
+<!-- Statistics Cards -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-lg-2 col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="fw-bold text-primary">
+                    {{ stats.documents }}
+                </h2>
+                <small class="text-muted">Documents</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <h2>{{ stats.recipients }}</h2>
+                <small class="text-muted">Recipients</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <h2>{{ stats.assignments }}</h2>
+                <small class="text-muted">Assignments</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <h2>{{ stats.generated }}</h2>
+                <small class="text-muted">Generated Docs</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <h2>{{ stats.detections }}</h2>
+                <small class="text-muted">Leak Detections</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <h2>{{ stats.users }}</h2>
+                <small class="text-muted">Users</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Email Statistics -->
+
+<div class="row g-3 mb-5">
+
+    <div class="col-md-4">
+
+        <div class="card border-success shadow h-100">
+
+            <div class="card-body text-center">
+
+                <h2 class="text-success">
+                    {{ stats.emails_sent }}
+                </h2>
+
+                <h6>Email Sent</h6>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-warning shadow h-100">
+
+            <div class="card-body text-center">
+
+                <h2 class="text-warning">
+                    {{ stats.pending_emails }}
+                </h2>
+
+                <h6>Pending Emails</h6>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-danger shadow h-100">
+
+            <div class="card-body text-center">
+
+                <h2 class="text-danger">
+                    {{ stats.failed_emails }}
+                </h2>
+
+                <h6>Failed Emails</h6>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Upload Chart -->
+
+<div class="row mb-5">
+
+    <div class="col-12">
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    📈 Monthly Document Uploads
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="uploadChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Quick Actions -->
+
+<div class="row g-4">
+
+    <div class="col-lg-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-body">
+
+                <h4>📄 Upload Document</h4>
+
+                <p>Upload DOCX or PDF files.</p>
+
+                <a
+                    href="{{ url_for('fingerprint.upload_document') }}"
+                    class="btn btn-primary">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-body">
+
+                <h4>👥 Manage Recipients</h4>
+
+                <p>Add and manage recipients.</p>
+
+                <a
+                    href="{{ url_for('recipient.recipients') }}"
+                    class="btn btn-primary">
+
+                    Manage
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-body">
+
+                <h4>🧬 Assign Documents</h4>
+
+                <p>Create fingerprinted documents.</p>
+
+                <a
+                    href="{{ url_for('assignment.assignments') }}"
+                    class="btn btn-primary">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-body">
+
+                <h4>📧 Generated Documents</h4>
+
+                <p>Download or email fingerprinted documents.</p>
+
+                <a
+                    href="{{ url_for('assignment.generated_documents') }}"
+                    class="btn btn-success">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-body">
+
+                <h4>🔍 Leak Detection</h4>
+
+                <p>Investigate suspected leaked documents.</p>
+
+                <a
+                    href="{{ url_for('leak_detection.detect') }}"
+                    class="btn btn-danger">
+
+                    Detect
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-body">
+
+                <h4>📑 Detection History</h4>
+
+                <p>Review all previous investigations.</p>
+
+                <a
+                    href="{{ url_for('leak_detection.history') }}"
+                    class="btn btn-info text-white">
+
+                    View
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr class="my-5">
+
+<!-- Recent Activity -->
+
+<div class="row">
+
+    <div class="col-lg-6">
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    📄 Recent Documents
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-hover">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Filename</th>
+
+                            <th>Uploaded By</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for doc in recent_documents %}
+
+                        <tr>
+
+                            <td>{{ doc.filename }}</td>
+
+                            <td>{{ doc.uploaded_by }}</td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    🔍 Recent Leak Detections
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-hover table-striped align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Recipient</th>
+
+                            <th>Confidence</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                {% if recent_documents %}
+
+                {% for doc in recent_documents %}
+
+                <tr>
+
+                    <td>{{ doc.filename }}</td>
+
+                    <td>{{ doc.uploaded_by }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="2" class="text-center text-muted">
+
+                        No documents uploaded yet.
+
+                    </td>
+
+                </tr>
+
+                {% endif %}
+
+                </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Chart Script -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const ctx = document.getElementById("uploadChart");
+
+    if (!ctx) return;
+
+    new Chart(ctx, {
+
+        type: "bar",
+
+        data: {
+
+            labels: {{ month_labels | tojson }},
+
+            datasets: [{
+
+                label: "Documents Uploaded",
+
+                data: {{ monthly_uploads | tojson }}
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+
+                    display: true
+
+                }
+
+            },
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    ticks: {
+
+                        precision: 0
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

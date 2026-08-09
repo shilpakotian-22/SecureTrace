@@ -1,0 +1,58 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+Reports
+{% endblock %}
+
+{% block dashboard_content %}
+
+<h2 class="mb-4">📊 Investigation Reports</h2>
+
+<table class="table table-bordered table-hover">
+
+    <thead>
+
+        <tr>
+
+            <th>ID</th>
+            <th>Recipient</th>
+            <th>Confidence</th>
+            <th>Download</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for detection in detections %}
+
+        <tr>
+
+            <td>{{ detection.id }}</td>
+
+            <td>{{ detection.detected_recipient }}</td>
+
+            <td>{{ detection.confidence }}%</td>
+
+            <td>
+
+                <a
+                    href="{{ url_for('reports.download_report', id=detection.id) }}"
+                    class="btn btn-primary btn-sm">
+
+                    Download PDF
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="row">
+
+<div class="col-lg-2 bg-white shadow-sm min-vh-100 p-3">
+
+<h5 class="fw-bold mb-4">
+
+🛡 {{ app_settings.application_name }}
+
+</h5>
+
+<div class="list-group">
+
+<a href="{{ url_for('dashboard.dashboard_home') }}"
+class="list-group-item list-group-item-action">
+
+🏠 Dashboard
+
+</a>
+
+<a href="{{ url_for('fingerprint.upload_document') }}"
+class="list-group-item list-group-item-action">
+
+📄 Documents
+
+</a>
+
+<a href="{{ url_for('recipient.recipients') }}"
+class="list-group-item list-group-item-action">
+
+👥 Recipients
+
+</a>
+
+<a href="{{ url_for('assignment.assignments') }}"
+class="list-group-item list-group-item-action">
+
+🧬 Fingerprints
+
+</a>
+
+<a
+href="{{ url_for('email_service.history') }}"
+class="list-group-item list-group-item-action">
+
+📧 Email Distribution
+
+</a>
+
+<a href="{{ url_for('leak_detection.detect') }}"
+class="list-group-item list-group-item-action">
+
+🔍 Leak Detection
+
+</a>
+
+<a
+href="{{ url_for('reports.reports_home') }}"
+class="list-group-item list-group-item-action">
+
+📊 Reports
+
+</a>
+
+<a
+href="{{ url_for('audit.audit_logs') }}"
+class="list-group-item list-group-item-action">
+
+📝 Audit Logs
+
+</a>
+
+<a
+href="{{ url_for('settings.application_settings') }}"
+class="list-group-item list-group-item-action">
+
+⚙ Settings
+
+</a>
+
+</div>
+
+</div>
+
+<div class="col-lg-10 p-4">
+
+{% block dashboard_content %}
+
+{% endblock %}
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

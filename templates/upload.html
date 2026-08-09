@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}
+Upload Document
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+<div class="col-md-6">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h3 class="mb-4">
+
+Upload Original Document
+
+</h3>
+
+<form method="POST"
+enctype="multipart/form-data">
+
+<div class="mb-3">
+
+<label class="form-label fw-semibold">
+
+Select DOCX or PDF
+
+</label>
+
+<input
+type="file"
+name="document"
+class="form-control"
+accept=".docx,.pdf"
+required>
+
+</div>
+
+<button
+type="submit"
+class="btn btn-success">
+
+Upload
+
+</button>
+
+</form>
+
+<hr class="my-5">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h3>
+
+        Uploaded Documents
+
+    </h3>
+
+    <form
+        method="GET"
+        class="d-flex"
+    >
+
+        <input
+            type="text"
+            name="search"
+            class="form-control me-2"
+            placeholder="Search filename..."
+            value="{{ search }}">
+
+        <button
+            class="btn btn-primary">
+
+            Search
+
+        </button>
+
+    </form>
+
+</div>
+
+<table class="table table-hover table-bordered align-middle mt-3">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Filename</th>
+
+<th>Stored File</th>
+
+<th>Uploaded By</th>
+
+<th>Upload Time</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if documents.items|length == 0 %}
+
+<tr>
+
+    <td colspan="6" class="text-center text-muted">
+
+        No documents found.
+
+    </td>
+
+</tr>
+
+{% endif %}    
+
+{% for document in documents.items %}
+
+<tr>
+
+<td>
+
+{{ document.id }}
+
+</td>
+
+<td>
+
+{{ document.filename }}
+
+</td>
+
+<td>
+
+    {{ document.filename }}
+
+</td>
+
+<td>
+
+{{ document.uploaded_by }}
+
+</td>
+
+<td>
+
+{{ document.uploaded_at.strftime("%d-%m-%Y %H:%M") }}
+
+</td>
+
+<td>
+
+<div class="d-flex gap-2">
+
+<a
+href="{{ url_for('uploaded_file', filename=document.filename) }}"
+class="btn btn-success btn-sm">
+
+Download
+
+</a>
+
+<a
+href="{{ url_for('fingerprint.delete_document', id=document.id) }}"
+class="btn btn-danger btn-sm">
+
+Delete
+
+</a>
+
+</div>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+<nav class="mt-4">
+
+    <ul class="pagination justify-content-center">
+
+        {% if documents.has_prev %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="{{ url_for('fingerprint.upload_document', page=documents.prev_num, search=search) }}">
+
+                Previous
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+        {% for page_num in documents.iter_pages() %}
+
+            {% if page_num %}
+
+                <li class="page-item {% if page_num == documents.page %}active{% endif %}">
+
+                    <a
+                        class="page-link"
+                        href="{{ url_for('fingerprint.upload_document', page=page_num, search=search) }}">
+
+                        {{ page_num }}
+
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+        {% endfor %}
+
+        {% if documents.has_next %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="{{ url_for('fingerprint.upload_document', page=documents.next_num, search=search) }}">
+
+                Next
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
